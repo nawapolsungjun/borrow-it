@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,4 +14,40 @@ model User {
   id       Int    @id @default(autoincrement())
   username String
   password String
+  role     Role   @default(USER)
+  records   BorrowRecord[]
+}
+
+model Item {
+  id         Int    @id @default(autoincrement())
+  name        String
+  serialNumber   String
+  status        ItemStatus     @default(AVAILABLE)
+  description   String
+  records       BorrowRecord[]
+}
+model BorrowRecord {
+  id        Int      @id @default(autoincrement())
+  itemId    Int
+  userId    Int
+  borrowedAt DateTime @default(now())
+  returnedAt DateTime
+  item      Item     @relation(fields: [itemId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+enum ItemStatus {
+  AVAILABLE
+  BORROWED
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum BorrowStatus {
+  BORROWED
+  RETURNED
+  LATE
 }
