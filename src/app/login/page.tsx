@@ -48,7 +48,8 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-500 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6">เข้าสู่ระบบ</h2>
+        <h1 className="text-5xl font-bold text-center mb-6 tagesschrift-regular">Borrow IT STT</h1>
+        <h2 className="text-3xl font-bold text-center mb-6 krub-regular">เข้าสู่ระบบ</h2>
         <Form
           name="login"
           initialValues={{ remember: true }}

@@ -9,17 +9,17 @@ type MenubarProps = {
 export default function MenuBar(props: MenubarProps) {
   return (
     <div>
-      <div className="p-4 bg-purple-400 text-5xl">
+      <div className="p-4 bg-gray-400 text-5xl">
         <div className="flex flex-row">
           <div className="basis-3/3">
-            <h1 className="">Sathon Tiger Borrow (Admin)</h1>
+            <h1 className="tagesschrift-regular">Sathon Tiger Borrow (Admin)</h1>
           </div>
           <div className="basis-0/3">
             <LogoutButton className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " />
           </div>
         </div>
       </div>
-      <div className="flex justify-start bg-purple-600 p-5 text-3xl text-white">
+      <div className="flex justify-start bg-gray-600 p-5 text-3xl text-white">
         <div className="ml-8">
           <Link href="/admin" className="krub-regular ml-3">
             หน้าหลัก
@@ -34,7 +34,7 @@ export default function MenuBar(props: MenubarProps) {
       </div>
       <div className="p-5 bg-gray-300">
         <p className="flex justify-start text-2xl krub-regular text-center">
-          ตอนนี้คุณอยู่หน้า {props.page}
+       {" "}   ตอนนี้คุณอยู่หน้า {props.page}{" "}
         </p>
       </div>
     </div>
