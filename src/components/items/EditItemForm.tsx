@@ -17,25 +17,19 @@ interface ItemFormValues {
 }
 
 interface EditItemFormProps {
-  initialItemData: ItemFormValues; // Server Component ควรส่งข้อมูลมาให้เสมอ
+  initialItemData: ItemFormValues;
   itemId: string;
 }
 
 const EditItemForm: React.FC<EditItemFormProps> = ({ initialItemData, itemId }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  // State สำหรับควบคุมการโหลดของฟอร์ม (เมื่อมีการ submit)
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  // itemData ใน state ตอนนี้ไม่ได้ใช้เพื่อควบคุม initialValues แล้ว
-  // แต่ยังคงเป็นแหล่งข้อมูลหลักในกรณีที่ต้องการเปลี่ยนแปลงค่าใน component
   const [itemData, setItemData] = useState<ItemFormValues>(initialItemData);
 
-  // Effect เพื่อตั้งค่าฟอร์มเมื่อ initialItemData เปลี่ยน (มาจาก Server Component)
-  // และเพื่อให้ Ant Design Form มีค่าเริ่มต้นที่ถูกต้อง
   useEffect(() => {
-    // ต้องตั้งค่าฟอร์มเมื่อ component ถูก mount หรือ initialItemData เปลี่ยน
+  
     form.setFieldsValue(initialItemData);
-    // อัปเดต itemData ใน state ให้ตรงกับ prop ที่รับมา
     setItemData(initialItemData);
   }, [initialItemData, form]); // เพิ่ม form ใน dependency array เพื่อความถูกต้องของ useEffect
 
@@ -66,26 +60,20 @@ const EditItemForm: React.FC<EditItemFormProps> = ({ initialItemData, itemId }) 
       console.error('Error updating item:', error);
       message.error('ไม่สามารถอัปเดตอุปกรณ์ได้:');
     } finally {
-      setIsSubmitting(false); // ตั้งค่า loading กลับ
+      setIsSubmitting(false);
     }
   };
 
-  // เนื่องจาก initialItemData ถูกรับมาจาก Server Component และควรมีค่าเสมอ
-  // เราไม่จำเป็นต้องมี loading state แยกสำหรับการ fetch ข้อมูลเริ่มต้นใน Client Component นี้แล้ว
-  // แต่เราจะใช้ Spin เพื่อแสดงสถานะการ submit ฟอร์มแทน
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <div className="flex items-center mb-6">
         <Button icon={<ArrowLeftOutlined />} onClick={() => router.push('/admin/item')} className="mr-4">
           กลับ
         </Button>
-        {/* ใช้ itemData จาก state ในกรณีที่มันถูกอัปเดต หรือ initialItemData */}
-        <h1 className="text-3xl font-bold text-gray-800">แก้ไขอุปกรณ์: {itemData?.name || ''}</h1>
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
-        {/* *** แก้ไขตรงนี้: Spin ครอบ Form และใช้ spinning={isSubmitting} *** */}
-        {/* initialValues={initialItemData} และ key={initialItemData.id} ควรจะถูกต้องแล้ว */}
+        <h1 className="text-3xl font-bold text-gray-800 krub-regular ml-3">แก้ไขอุปกรณ์: {itemData?.name || ''}</h1>
         <Spin spinning={isSubmitting} size="large" tip="กำลังบันทึกข้อมูล...">
           <Form
             form={form}

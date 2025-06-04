@@ -1,6 +1,3 @@
-// src/app/admin/item/edit/[id]/page.tsx
-// ไม่มี "use client"; แล้ว --> นี่คือ Server Component
-
 import React from "react";
 import { redirect } from "next/navigation";
 import { message } from "antd";
