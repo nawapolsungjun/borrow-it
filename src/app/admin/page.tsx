@@ -3,7 +3,8 @@ import MenuBar from "@/components/admin/MenuBar";
 import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
+
 
 
 const AdminPage = async () => {

@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { generateToken, setAuthCookie } from "@/lib/auth"; // นำเข้าฟังก์ชัน JWT
 import { prisma } from "@/lib/prisma";
 
+
+
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();

@@ -1,6 +1,5 @@
 // app/api/items/route.ts
 
-
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -25,7 +24,10 @@ export async function POST(request: Request) {
 
     if (!name || !serialNumber || !status) {
       return NextResponse.json(
-        { message: "กรุณากรอกข้อมูลชื่ออุปกรณ์, Serial Number และสถานะให้ครบถ้วน" },
+        {
+          message:
+            "กรุณากรอกข้อมูลชื่ออุปกรณ์, Serial Number และสถานะให้ครบถ้วน",
+        },
         { status: 400 }
       );
     }

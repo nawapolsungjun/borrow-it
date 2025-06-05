@@ -24,10 +24,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
     });
 
     if (!item) {
-      return NextResponse.json(
-        { message: "ไม่พบอุปกรณ์" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "ไม่พบอุปกรณ์" }, { status: 404 });
     }
 
     return NextResponse.json(item, { status: 200 });
@@ -54,16 +51,16 @@ export async function PUT(request: Request, { params }: { params: Params }) {
     }
 
     if (serialNumber) {
-        const existingItem = await prisma.item.findUnique({
-            where: { serialNumber: serialNumber },
-        });
+      const existingItem = await prisma.item.findUnique({
+        where: { serialNumber: serialNumber },
+      });
 
-        if (existingItem && existingItem.id !== id) {
-            return NextResponse.json(
-                { message: "Serial Number นี้มีอยู่ในระบบแล้ว" },
-                { status: 409 }
-            );
-        }
+      if (existingItem && existingItem.id !== id) {
+        return NextResponse.json(
+          { message: "Serial Number นี้มีอยู่ในระบบแล้ว" },
+          { status: 409 }
+        );
+      }
     }
 
     const updatedItem = await prisma.item.update({
@@ -92,10 +89,14 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
     const id = parseInt(params.id); // แปลง ID จาก string เป็น number
 
     // --- เพิ่ม LOGGING ตรงนี้ ---
-    console.log(`[DELETE /api/auth/item/${id}] - Received request to delete item.`); 
+    console.log(
+      `[DELETE /api/auth/item/${id}] - Received request to delete item.`
+    );
 
     if (isNaN(id)) {
-      console.error(`[DELETE /api/auth/item/${id}] - Error: Invalid ID received. ID was '${params.id}'.`); 
+      console.error(
+        `[DELETE /api/auth/item/${id}] - Error: Invalid ID received. ID was '${params.id}'.`
+      );
       return NextResponse.json(
         { message: "ID อุปกรณ์ไม่ถูกต้อง" },
         { status: 400 }
@@ -108,7 +109,9 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
     });
 
     if (!existingItem) {
-      console.warn(`[DELETE /api/auth/item/${id}] - Warning: Item with ID ${id} not found in DB.`); 
+      console.warn(
+        `[DELETE /api/auth/item/${id}] - Warning: Item with ID ${id} not found in DB.`
+      );
       return NextResponse.json(
         { message: "ไม่พบอุปกรณ์ที่ต้องการลบ" },
         { status: 404 } // 404 Not Found
@@ -119,32 +122,39 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
       where: { id: id },
     });
 
-    console.log(`[DELETE /api/auth/item/${id}] - Successfully deleted item with ID ${id}.`); 
-    return NextResponse.json(
-      { message: "ลบอุปกรณ์สำเร็จ" },
-      { status: 200 }
+    console.log(
+      `[DELETE /api/auth/item/${id}] - Successfully deleted item with ID ${id}.`
     );
-
-  } catch (error: unknown) { // แก้ไข: เปลี่ยน error: any เป็น error: unknown
-    console.error(`[DELETE /api/auth/item/${params.id}] - Fatal Error during deletion:`, error); 
+    return NextResponse.json({ message: "ลบอุปกรณ์สำเร็จ" }, { status: 200 });
+  } catch (error: unknown) {
+    // แก้ไข: เปลี่ยน error: any เป็น error: unknown
+    console.error(
+      `[DELETE /api/auth/item/${params.id}] - Fatal Error during deletion:`,
+      error
+    );
 
     // --- เพิ่มการจัดการ Error เฉพาะของ Prisma ---
     // ตรวจสอบว่า error เป็น object และมี property 'code'
-    if (error && typeof error === 'object' && 'code' in error) { 
+    if (error && typeof error === "object" && "code" in error) {
       // Narrow the type of error to access 'code' safely
       const prismaError = error as { code: string; message?: string }; // Cast to a more specific type
 
-      if (prismaError.code === 'P2025') { // Prisma error code for record not found
+      if (prismaError.code === "P2025") {
+        // Prisma error code for record not found
         return NextResponse.json(
           { message: "ไม่พบอุปกรณ์ที่ต้องการลบ (Prisma Error P2025)" },
           { status: 404 }
         );
       } else {
-          // จัดการ Error อื่นๆ ที่มาจาก Prisma โดยดูจาก code ของ Error
-          return NextResponse.json(
-              { message: `เกิดข้อผิดพลาดจากฐานข้อมูล: ${prismaError.code} - ${prismaError.message || 'Unknown Prisma error'}` }, 
-              { status: 500 }
-          );
+        // จัดการ Error อื่นๆ ที่มาจาก Prisma โดยดูจาก code ของ Error
+        return NextResponse.json(
+          {
+            message: `เกิดข้อผิดพลาดจากฐานข้อมูล: ${prismaError.code} - ${
+              prismaError.message || "Unknown Prisma error"
+            }`,
+          },
+          { status: 500 }
+        );
       }
     }
     // Generic error for unexpected issues
