@@ -1,19 +1,19 @@
 import React from "react";
 import MenuBar from "@/components/admin/MenuBar";
-import { verifyToken } from "@/lib/auth"; //
+import { verifyToken } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma"; // // นำเข้า prisma client
+import { prisma } from "@/lib/prisma";
 
 const AdminPage = async () => {
   // อ่าน cookie จาก request ใน Server Component
   const cookieStore = await cookies();
-  const authToken = cookieStore.get("auth_token")?.value; //
+  const authToken = cookieStore.get("auth_token")?.value;
 
   let user: { id: number; username: string; role: string } | null = null;
 
   if (authToken) {
-    user = verifyToken(authToken); //
+    user = verifyToken(authToken);
   }
 
   // ถ้าไม่มี Token หรือ Token ไม่ถูกต้อง หรือ Role ไม่ใช่ ADMIN
@@ -70,7 +70,6 @@ const AdminPage = async () => {
             </h2>
           </div>
         </div>
-        {/* คุณสามารถเพิ่มส่วนแสดงผลอื่นๆ ที่นี่ได้ */}
       </div>
     </div>
   );

@@ -86,7 +86,6 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
   try {
     const id = parseInt(params.id); // แปลง ID จาก string เป็น number
 
-    // --- เพิ่ม LOGGING ตรงนี้ ---
     console.log(
       `[DELETE /api/auth/item/${id}] - Received request to delete item.`
     );
@@ -125,20 +124,14 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
     );
     return NextResponse.json({ message: "ลบอุปกรณ์สำเร็จ" }, { status: 200 });
   } catch (error: unknown) {
-    // แก้ไข: เปลี่ยน error: any เป็น error: unknown
     console.error(
       `[DELETE /api/auth/item/${params.id}] - Fatal Error during deletion:`,
       error
     );
-
-    // --- เพิ่มการจัดการ Error เฉพาะของ Prisma ---
     // ตรวจสอบว่า error เป็น object และมี property 'code'
     if (error && typeof error === "object" && "code" in error) {
-      // Narrow the type of error to access 'code' safely
-      const prismaError = error as { code: string; message?: string }; // Cast to a more specific type
-
+      const prismaError = error as { code: string; message?: string };
       if (prismaError.code === "P2025") {
-        // Prisma error code for record not found
         return NextResponse.json(
           { message: "ไม่พบอุปกรณ์ที่ต้องการลบ (Prisma Error P2025)" },
           { status: 404 }
