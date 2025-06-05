@@ -1,45 +1,47 @@
-// components/LogoutButton.tsx
-"use client"; // ทำให้เป็น Client Component
+"use client";
 
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { Button, message } from 'antd'; // นำเข้า Button และ message
-import { LogoutOutlined } from '@ant-design/icons'; // ไอคอนสำหรับ Logout
+import React from "react";
+import { useRouter } from "next/navigation";
+import { Button, message } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
 
 interface LogoutButtonProps {
-  className?: string; // สำหรับ Tailwind CSS หรือ class อื่นๆ
-  buttonText?: string; // ข้อความบนปุ่ม
+  className?: string;
+  buttonText?: string;
 }
 
-const LogoutButton: React.FC<LogoutButtonProps> = ({ className, buttonText = "ออกจากระบบ" }) => {
+const LogoutButton: React.FC<LogoutButtonProps> = ({
+  className,
+  buttonText = "ออกจากระบบ",
+}) => {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
-        message.success('ออกจากระบบสำเร็จ');
-        router.push('/login'); // เปลี่ยนเส้นทางไปหน้า Login
+        message.success("ออกจากระบบสำเร็จ");
+        router.push("/login");
       } else {
         const errorData = await response.json();
-        message.error(errorData.message || 'ออกจากระบบไม่สำเร็จ');
+        message.error(errorData.message || "ออกจากระบบไม่สำเร็จ");
       }
     } catch (error) {
-      console.error('Logout error:', error);
-      message.error('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์เพื่อออกจากระบบ');
+      console.error("Logout error:", error);
+      message.error("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์เพื่อออกจากระบบ");
     }
   };
 
   return (
     <Button
-      type="primary" // หรือ 'default', 'link' ตามดีไซน์ที่คุณต้องการ
-      danger // ทำให้เป็นสีแดง
+      type="primary"
+      danger
       icon={<LogoutOutlined />} // ใส่ไอคอน
       onClick={handleLogout}
       className={className}

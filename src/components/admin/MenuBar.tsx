@@ -1,4 +1,3 @@
-// src/components/admin/MenuBar.tsx
 import Link from "next/link";
 import LogoutButton from "../LogoutButton";
 
@@ -12,7 +11,9 @@ export default function MenuBar(props: MenubarProps) {
       <div className="p-4 bg-gray-400 text-5xl">
         <div className="flex flex-row">
           <div className="basis-3/3">
-            <h1 className="tagesschrift-regular">Sathon Tiger Borrow (Admin)</h1>
+            <h1 className="tagesschrift-regular">
+              Sathon Tiger Borrow (Admin)
+            </h1>
           </div>
           <div className="basis-0/3">
             <LogoutButton className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " />
@@ -34,7 +35,8 @@ export default function MenuBar(props: MenubarProps) {
       </div>
       <div className="p-5 bg-gray-300">
         <p className="flex justify-start text-2xl font-title krub-regular text-center">
-          {" "}ตอนนี้คุณอยู่หน้า {props.page}{" "}
+          {" "}
+          ตอนนี้คุณอยู่หน้า {props.page}{" "}
         </p>
       </div>
     </div>
