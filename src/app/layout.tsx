@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-// src/app/layout.tsx
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -45,18 +44,3 @@ export default function RootLayout({
     </html>
   );
 }
-=======
-import React from 'react';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import '../app/globals.css'
-
-const RootLayout = ({ children }: React.PropsWithChildren) => (
-  <html lang="en">
-    <body>
-      <AntdRegistry>{children}</AntdRegistry>
-    </body>
-  </html>
-);
-
-export default RootLayout;
->>>>>>> d8b464842126db760730f3d0b4b39e8bb021029d
