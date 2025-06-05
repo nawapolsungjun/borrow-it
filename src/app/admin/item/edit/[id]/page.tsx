@@ -3,7 +3,10 @@
 
 import React from "react";
 import { redirect } from "next/navigation";
-import { message } from "antd";
+// import { message } from "antd"; // message ของ antd มักจะใช้ใน Client Component
+// ถ้าต้องการใช้ message ใน Server Component อาจต้องพิจารณาใช้ไลบรารีอื่น
+// หรือส่งผลลัพธ์ผ่าน props ไปยัง Client Component ที่แสดง message
+
 import EditItemForm from "@/components/items/EditItemForm";
 
 interface ItemDataType {
@@ -15,17 +18,23 @@ interface ItemDataType {
 }
 
 interface EditItemPageProps {
-  params: {
+  // เปลี่ยน Type ของ params ให้เป็น Promise
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 const EditItemPage = async ({ params }: EditItemPageProps) => {
-  const itemId = params.id;
+  // ใช้ await เพื่อ deconstruct ค่าจาก params
+  const { id: itemId } = await params; // เข้าถึงค่า id จาก Promise
+
   let initialItemData: ItemDataType | null = null;
 
+  // การใช้ message.error ใน Server Component อาจมีปัญหา
+  // ควรจะใช้ try/catch และ redirect หรือส่งข้อมูล error ไปที่ Client Component แทน
   if (!itemId || isNaN(parseInt(itemId))) {
-    message.error("ID อุปกรณ์ไม่ถูกต้อง");
+    // message.error("ID อุปกรณ์ไม่ถูกต้อง"); // อันนี้อาจจะ error เพราะ antd message ใช้ client-side context
+    console.error("ID อุปกรณ์ไม่ถูกต้อง หรือไม่มี");
     redirect("/admin/item");
   }
 
@@ -43,7 +52,6 @@ const EditItemPage = async ({ params }: EditItemPageProps) => {
       console.error(
         `Failed to fetch item ${itemId}: ${response.status} ${response.statusText}`
       );
-
       redirect("/admin/item");
     }
 

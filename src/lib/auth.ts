@@ -2,8 +2,6 @@
 import jwt from 'jsonwebtoken';
 import { serialize } from 'cookie';
 
-// ควรเก็บ SECRET_KEY ไว้ใน .env.local และใช้ค่าที่ปลอดภัยและซับซ้อน
-// สำหรับโปรเจกต์รายวิชา คุณสามารถใช้ค่าธรรมดาได้ แต่ใน production ต้องเป็นค่าที่คาดเดายากมาก
 const SECRET_KEY = process.env.JWT_SECRET || 'your_super_secret_key_for_jwt_development';
 
 interface UserPayload {
