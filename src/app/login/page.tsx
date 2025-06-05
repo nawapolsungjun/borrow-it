@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json(); // อ่าน JSON body ก่อน
+      const data = await response.json(); 
 
       if (response.ok) {
         message.success(data.message);
