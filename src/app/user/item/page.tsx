@@ -128,7 +128,7 @@ export default function UserItem() {
     <div>
       <MenuBar page={"คลังอุปกรณ์"} />
       <div className="p-5">
-        <h2 className="text-3xl font-bold mb-5">คลังอุปกรณ์ที่พร้อมให้ยืม</h2>
+        <h2 className="text-3xl font-bold mb-5 krub-regular">คลังอุปกรณ์ที่พร้อมให้ยืม</h2>
         <Table
           dataSource={items}
           columns={columns}

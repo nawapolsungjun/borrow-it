@@ -33,8 +33,8 @@ export default function MenuBar(props: MenubarProps) {
         </div>
       </div>
       <div className="p-5 bg-gray-300">
-        <p className="flex justify-start text-2xl krub-regular text-center">
-       {" "}   ตอนนี้คุณอยู่หน้า {props.page}{" "}
+        <p className="flex justify-start text-2xl font-title krub-regular text-center">
+          {" "}ตอนนี้คุณอยู่หน้า {props.page}{" "}
         </p>
       </div>
     </div>

@@ -192,7 +192,7 @@ const ItemAdminPage: React.FC = () => {
         เพิ่มอุปกรณ์
       </Button>
       <div className="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
-        <h1 className="text-3xl font-bold text-gray-800">รายการอุปกรณ์</h1>
+        <h1 className="text-3xl font-bold text-gray-800 krub-regular">รายการอุปกรณ์</h1>
         <Table<ItemDataType>
           columns={columns}
           dataSource={items.map((item) => ({

@@ -1,13 +1,14 @@
-"use client"; 
+// components/LogoutButton.tsx
+"use client"; // ทำให้เป็น Client Component
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, message } from 'antd'; 
-import { LogoutOutlined } from '@ant-design/icons'; 
+import { Button, message } from 'antd'; // นำเข้า Button และ message
+import { LogoutOutlined } from '@ant-design/icons'; // ไอคอนสำหรับ Logout
 
 interface LogoutButtonProps {
-  className?: string;
-  buttonText?: string; 
+  className?: string; // สำหรับ Tailwind CSS หรือ class อื่นๆ
+  buttonText?: string; // ข้อความบนปุ่ม
 }
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ className, buttonText = "ออกจากระบบ" }) => {
@@ -21,10 +22,10 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ className, buttonText = "�
           'Content-Type': 'application/json',
         },
       });
-// ออกจากระบบให้เปลี่ยนเส้นทางไปหน้า Login
+
       if (response.ok) {
         message.success('ออกจากระบบสำเร็จ');
-        router.push('/login'); 
+        router.push('/login'); // เปลี่ยนเส้นทางไปหน้า Login
       } else {
         const errorData = await response.json();
         message.error(errorData.message || 'ออกจากระบบไม่สำเร็จ');
@@ -37,8 +38,8 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ className, buttonText = "�
 
   return (
     <Button
-      type="primary" 
-      danger // สีแดง
+      type="primary" // หรือ 'default', 'link' ตามดีไซน์ที่คุณต้องการ
+      danger // ทำให้เป็นสีแดง
       icon={<LogoutOutlined />} // ใส่ไอคอน
       onClick={handleLogout}
       className={className}

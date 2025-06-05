@@ -163,7 +163,7 @@ export default function UserBorrowPage() {
     <div>
       <MenuBar page={"แดชบอร์ด"} />
       <div className="p-5">
-        <h2 className="text-3xl font-bold mb-5">แดชบอร์ดของคุณ</h2>
+        <h2 className="text-3xl font-bold mb-5 krub-regular">แดชบอร์ดของคุณ</h2>
         <Table
           dataSource={borrowRecords}
           columns={columns}

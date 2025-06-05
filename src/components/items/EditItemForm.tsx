@@ -80,12 +80,11 @@ const EditItemForm: React.FC<EditItemFormProps> = ({ initialItemData, itemId }) 
           กลับ
         </Button>
         {/* ใช้ itemData จาก state ในกรณีที่มันถูกอัปเดต หรือ initialItemData */}
-        <h1 className="text-3xl font-bold text-gray-800">แก้ไขอุปกรณ์: {itemData?.name || ''}</h1>
+        
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
-        {/* *** แก้ไขตรงนี้: Spin ครอบ Form และใช้ spinning={isSubmitting} *** */}
-        {/* initialValues={initialItemData} และ key={initialItemData.id} ควรจะถูกต้องแล้ว */}
+      <h1 className="text-center text-3xl font-bold text-gray-800">แก้ไขอุปกรณ์: {itemData?.name || ''}</h1>
         <Spin spinning={isSubmitting} size="large" tip="กำลังบันทึกข้อมูล...">
           <Form
             form={form}

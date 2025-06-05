@@ -1,9 +1,11 @@
-"use client";
+// src/app/admin/borrow/page.tsx
+"use client"; // ต้องเป็น Client Component เพื่อใช้ useEffect, useState, และเรียก API
 
-import MenuBar from "@/components/admin/MenuBar";
+import MenuBar from "@/components/admin/MenuBar"; // ใช้ MenuBar ของ Admin
 import { useEffect, useState } from "react";
-import { Table, message, Tag } from "antd";
+import { Table, message, Tag } from "antd"; // นำเข้า Tag สำหรับแสดงสถานะ
 
+// กำหนด Type สำหรับ Item, User และ BorrowRecord ตาม schema.prisma
 interface Item {
   id: number;
   name: string;
@@ -13,18 +15,18 @@ interface Item {
 }
 
 interface User {
-  username: string;
+  username: string; // เราเลือกแค่ username ใน API
 }
 
 interface BorrowRecord {
   id: number;
   itemId: number;
   userId: number;
-  borrowedAt: string;
-  returnedAt: string | null;
-  item: Item;
-  user: User;
-  username: string;
+  borrowedAt: string; // ISO string from Date
+  returnedAt: string | null; // ISO string or null
+  item: Item; // ข้อมูล Item ที่รวมมา
+  user: User; // ข้อมูล User ที่รวมมา
+  username: string; // เพิ่มมาจากการ format ใน API เพื่อให้ Table เข้าถึงง่าย
 }
 
 const AdminBorrowPage = () => {
@@ -33,20 +35,17 @@ const AdminBorrowPage = () => {
 
   useEffect(() => {
     const checkAuthAndFetchRecords = async () => {
+
       try {
-        const response = await fetch("/api/admin/borrowRecords");
+        const response = await fetch('/api/admin/borrowRecords');
         if (!response.ok) {
+          // ถ้าไม่ OK อาจจะเพราะไม่ได้เป็น ADMIN หรือไม่มี Token
           const errorData = await response.json();
           if (response.status === 401 || response.status === 403) {
-            message.error(
-              errorData.message ||
-                "คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กรุณาเข้าสู่ระบบในฐานะ Admin"
-            );
-            return;
+            message.error(errorData.message || 'คุณไม่มีสิทธิ์เข้าถึงหน้านี้ กรุณาเข้าสู่ระบบในฐานะ Admin');
+            return; // หยุดการทำงาน
           }
-          throw new Error(
-            errorData.message || "Failed to fetch borrow records"
-          );
+          throw new Error(errorData.message || 'Failed to fetch borrow records');
         }
         const data: BorrowRecord[] = await response.json();
         setBorrowRecords(data);
@@ -61,62 +60,51 @@ const AdminBorrowPage = () => {
     checkAuthAndFetchRecords();
   }, []);
 
-  // กำหนด Columns
+  // กำหนด Columns สำหรับ Table
   const columns = [
     {
-      title: "ผู้ยืม",
-      dataIndex: "username",
-      key: "username",
+      title: 'ผู้ยืม',
+      dataIndex: 'username', // ใช้ username ที่เราเพิ่มเข้ามาใน object
+      key: 'username',
     },
     {
-      title: "ชื่ออุปกรณ์",
-      dataIndex: ["item", "name"],
-      key: "itemName",
+      title: 'ชื่ออุปกรณ์',
+      dataIndex: ['item', 'name'], // เข้าถึงชื่ออุปกรณ์จาก object item
+      key: 'itemName',
     },
     {
-      title: "หมายเลขซีเรียล",
-      dataIndex: ["item", "serialNumber"],
-      key: "serialNumber",
+      title: 'หมายเลขซีเรียล',
+      dataIndex: ['item', 'serialNumber'], // เข้าถึง serialNumber จาก object item
+      key: 'serialNumber',
     },
     {
-      title: "วันที่ยืม",
-      dataIndex: "borrowedAt",
-      key: "borrowedAt",
-      render: (text: string) =>
-        new Date(text).toLocaleDateString("th-TH", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+      title: 'วันที่ยืม',
+      dataIndex: 'borrowedAt',
+      key: 'borrowedAt',
+      render: (text: string) => new Date(text).toLocaleDateString('th-TH', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }),
     },
     {
-      title: "วันที่คืน",
-      dataIndex: "returnedAt",
-      key: "returnedAt",
-      render: (text: string | null) =>
-        text ? (
-          new Date(text).toLocaleDateString("th-TH", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        ) : (
-          <Tag color="orange">ยังไม่คืน</Tag>
-        ),
+      title: 'วันที่คืน',
+      dataIndex: 'returnedAt',
+      key: 'returnedAt',
+      render: (text: string | null) => text ? new Date(text).toLocaleDateString('th-TH', {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }) : <Tag color="orange">ยังไม่คืน</Tag>, // แสดง Tag สำหรับยังไม่คืน
     },
     {
-      title: "สถานะการยืม",
-      key: "borrowStatus",
-      render: (text: string, record: BorrowRecord) =>
+      title: 'สถานะการยืม',
+      key: 'borrowStatus',
+      render: (text: string, record: BorrowRecord) => (
         record.returnedAt === null ? (
-          <Tag color="volcano">กำลังยืม</Tag>
+          <Tag color="volcano">กำลังยืม</Tag> // ใช้สีแดง/ส้มสำหรับกำลังยืม
         ) : (
-          <Tag color="green">คืนแล้ว</Tag>
-        ),
+          <Tag color="green">คืนแล้ว</Tag> // ใช้สีเขียวสำหรับคืนแล้ว
+        )
+      ),
     },
   ];
 
@@ -124,7 +112,7 @@ const AdminBorrowPage = () => {
     <div>
       <MenuBar page={"ประวัติการยืม"} />
       <div className="p-5">
-        <h2 className="text-3xl font-bold mb-5">ประวัติการยืมทั้งหมด</h2>
+        <h2 className="text-3xl font-bold mb-5 krub-regular">ประวัติการยืมทั้งหมด</h2>
         <Table
           dataSource={borrowRecords}
           columns={columns}

@@ -9,7 +9,7 @@ export default function MenuBar(props: MenubarProps) {
       <div className="p-4 bg-blue-400 text-5xl">
         <div className="flex flex-row">
           <div className="basis-3/3">
-            <h1 className="tagesschrift-regular">Sathon Tiger Borrow</h1>
+            <h1 className="">Sathon Tiger Borrow</h1>
           </div>
           <div className="basis-0/3">
             <LogoutButton className=" bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded " />

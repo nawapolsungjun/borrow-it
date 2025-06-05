@@ -48,10 +48,11 @@ const AddItemPage: React.FC = () => {
         <Button icon={<ArrowLeftOutlined />} onClick={() => router.push('/admin/item')} className="mr-4">
           กลับ
         </Button>
-        <h1 className="text-3xl font-bold text-gray-800">เพิ่มอุปกรณ์ใหม่</h1>
+        
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
+        <h1 className="text-center text-3xl font-bold text-gray-800 krub-regular">เพิ่มอุปกรณ์ใหม่</h1>
         <Form
           form={form}
           layout="vertical"
