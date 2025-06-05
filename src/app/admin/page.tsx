@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 const AdminPage = async () => {
-  // อ่าน cookie จาก request ใน Server Component
+ 
   const cookieStore = await cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
