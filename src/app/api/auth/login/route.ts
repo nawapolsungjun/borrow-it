@@ -1,9 +1,8 @@
-// app/api/auth/login/route.ts
-
 import { NextResponse } from "next/server";
-import { generateToken, setAuthCookie } from "@/lib/auth"; // นำเข้าฟังก์ชัน JWT
+import { generateToken, setAuthCookie } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+// POST สำหรับจัดการคำขอเข้าสู่ระบบ
 export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
@@ -15,6 +14,7 @@ export async function POST(request: Request) {
       );
     }
 
+    // ค้นหาผู้ใช้ในฐานข้อมูลด้วย username
     const user = await prisma.user.findUnique({
       where: { username: username },
     });
@@ -26,7 +26,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // เปรียบเทียบรหัสผ่านแบบ Plain Text (ตามที่คุณต้องการ)
     if (password !== user.password) {
       return NextResponse.json(
         { message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" },
@@ -34,13 +33,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // ล็อกอินสำเร็จ: สร้าง JWT
-    const token = generateToken({ id: user.id, username: user.username, role: user.role });
+    const token = generateToken({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+    });
 
-    // ตั้งค่า Cookie
     const cookie = setAuthCookie(token);
 
-    // ส่งการตอบกลับพร้อม Set-Cookie Header
     return new NextResponse(
       JSON.stringify({
         message: "เข้าสู่ระบบสำเร็จ",
@@ -49,8 +49,8 @@ export async function POST(request: Request) {
       {
         status: 200,
         headers: {
-          'Set-Cookie': cookie,
-          'Content-Type': 'application/json',
+          "Set-Cookie": cookie,
+          "Content-Type": "application/json",
         },
       }
     );

@@ -1,10 +1,10 @@
-"use client"; // ต้องเป็น Client Component เพื่อใช้ useEffect, useState, และเรียก API
+"use client";
 
-import MenuBar from "@/components/admin/MenuBar"; 
+import MenuBar from "@/components/admin/MenuBar";
 import { useEffect, useState } from "react";
-import { Table, message, Tag } from "antd"; // นำเข้า Tag สำหรับแสดงสถานะ
+import { Table, message, Tag } from "antd";
 
-// กำหนด Type สำหรับ 
+// กำหนด Type
 interface Item {
   id: number;
   name: string;
@@ -21,11 +21,11 @@ interface BorrowRecord {
   id: number;
   itemId: number;
   userId: number;
-  borrowedAt: string; 
+  borrowedAt: string;
   returnedAt: string | null;
-  item: Item; // ข้อมูล Item ที่รวมมา
-  user: User; // ข้อมูล User ที่รวมมา
-  username: string; // เพิ่มมาจากการ format ใน API เพื่อให้ Table เข้าถึงง่าย
+  item: Item;
+  user: User;
+  username: string;
 }
 
 const AdminBorrowPage = () => {

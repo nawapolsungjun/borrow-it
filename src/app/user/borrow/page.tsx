@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button, Table, message, Modal } from "antd";
 import { RollbackOutlined } from "@ant-design/icons";
 
+// กำหนด Type สำหรับข้อมูล Item
 interface Item {
   id: number;
   name: string;

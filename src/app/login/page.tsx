@@ -1,4 +1,3 @@
-// LoginPage.tsx
 "use client";
 
 import React from "react";
@@ -10,9 +9,11 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   const onFinish = async (values: { username: string; password: string }) => {
+    // แสดงข้อมูลที่ผู้ใช้กรอกใน console
     console.log("Submitting:", values);
     try {
       const response = await fetch("/api/auth/login", {
+        // ส่งคำขอเข้าสู่ระบบไปยัง API
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,13 +21,13 @@ const LoginPage: React.FC = () => {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json(); // อ่าน JSON body ก่อน
+      const data = await response.json();
 
       if (response.ok) {
         message.success(data.message);
-        console.log("Login successful:", data.user);
+        console.log("Login successful:", data.user); // แสดงข้อมูลผู้ใช้ที่เข้าสู่ระบบสำเร็จ
 
-        const userRole = data.user.role;
+        const userRole = data.user.role; // ดึงบทบาทผู้ใช้
 
         if (userRole === "ADMIN") {
           router.push("/admin");
@@ -36,10 +37,12 @@ const LoginPage: React.FC = () => {
           router.push("/");
         }
       } else {
+        // แสดงข้อความผิดพลาดใน LOg หากเข้าสู่ระบบไม่สำเร็จ
         message.error(data.message || "เกิดข้อผิดพลาดในการเข้าสู่ระบบ");
         console.error("Login failed:", data.message);
       }
     } catch (error) {
+      // จัดการข้อผิดพลาดที่เกิดจากการเชื่อมต่อเครือข่ายหรือเซิร์ฟเวอร์
       message.error("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
       console.error("Network or server error:", error);
     }
@@ -48,8 +51,12 @@ const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-500 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-        <h2 className="text-5xl font-bold text-center mb-6 tagesschrift-regular">Borrow-IT STT</h2>
-        <h2 className="text-3xl font-bold text-center mb-6 krub-regular">เข้าสู่ระบบ</h2>
+        <h2 className="text-5xl font-bold text-center mb-6 tagesschrift-regular">
+          Borrow-IT STT
+        </h2>
+        <h2 className="text-3xl font-bold text-center mb-6 krub-regular">
+          เข้าสู่ระบบ
+        </h2>
         <Form
           name="login"
           initialValues={{ remember: true }}

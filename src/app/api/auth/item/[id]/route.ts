@@ -1,15 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+// กำหนด Type ID ของอุปกรณ์ที่จะถูกส่งมาใน URL path
 interface Params {
   id: string;
 }
 
-// --- GET Request: ดึงข้อมูลอุปกรณ์ตาม ID ---
+// GET Request: ดึงข้อมูลอุปกรณ์ตาม ID
 export async function GET(request: Request, { params }: { params: Params }) {
   try {
     const id = parseInt(params.id);
 
+    // ตรวจสอบว่า ID ที่ได้มาเป็นตัวเลขที่ถูกต้องหรือไม่
     if (isNaN(id)) {
       return NextResponse.json(
         { message: "ID อุปกรณ์ไม่ถูกต้อง" },
@@ -17,10 +19,12 @@ export async function GET(request: Request, { params }: { params: Params }) {
       );
     }
 
+    // ค้นหาอุปกรณ์ในฐานข้อมูลด้วย ID
     const item = await prisma.item.findUnique({
       where: { id: id },
     });
 
+    // หากไม่พบอุปกรณ์
     if (!item) {
       return NextResponse.json({ message: "ไม่พบอุปกรณ์" }, { status: 404 });
     }
@@ -35,12 +39,14 @@ export async function GET(request: Request, { params }: { params: Params }) {
   }
 }
 
-// --- PUT Request: อัปเดตข้อมูลอุปกรณ์ตาม ID ---
+// PUT Request: อัปเดตข้อมูลอุปกรณ์ตาม ID
 export async function PUT(request: Request, { params }: { params: Params }) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt(params.id); // แปลง ID จาก string เป็น number
+    // ดึงข้อมูลที่ต้องการอัปเดตจาก body ของ request
     const { name, serialNumber, status, description } = await request.json();
 
+    // ตรวจสอบว่า ID ที่ได้มาเป็นตัวเลขที่ถูกต้องหรือไม่
     if (isNaN(id)) {
       return NextResponse.json(
         { message: "ID อุปกรณ์ไม่ถูกต้อง" },
@@ -48,6 +54,7 @@ export async function PUT(request: Request, { params }: { params: Params }) {
       );
     }
 
+    // หากมีการส่ง serialNumber มาเพื่ออัปเดต
     if (serialNumber) {
       const existingItem = await prisma.item.findUnique({
         where: { serialNumber: serialNumber },
@@ -61,6 +68,7 @@ export async function PUT(request: Request, { params }: { params: Params }) {
       }
     }
 
+     // อัปเดตข้อมูลอุปกรณ์ในฐานข้อมูล
     const updatedItem = await prisma.item.update({
       where: { id: id },
       data: {
@@ -90,6 +98,7 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
       `[DELETE /api/auth/item/${id}] - Received request to delete item.`
     );
 
+    // ตรวจสอบว่า ID ที่ได้มาเป็นตัวเลขที่ถูกต้องหรือไม่
     if (isNaN(id)) {
       console.error(
         `[DELETE /api/auth/item/${id}] - Error: Invalid ID received. ID was '${params.id}'.`
@@ -100,7 +109,7 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
       );
     }
 
-    // --- เพิ่มการตรวจสอบ Item ก่อนลบ เพื่อให้ได้ Response 404 ที่ชัดเจนขึ้น ---
+    // --- เพิ่มการตรวจสอบ Item ก่อนลบ เพื่อให้ได้ Response 404 ที่ชัดเจนขึ้น 
     const existingItem = await prisma.item.findUnique({
       where: { id: id },
     });
@@ -115,6 +124,7 @@ export async function DELETE(request: Request, { params }: { params: Params }) {
       );
     }
 
+    // ลบอุปกรณ์ออกจากฐานข้อมูล
     await prisma.item.delete({
       where: { id: id },
     });

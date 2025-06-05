@@ -7,6 +7,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
+// กำหนด Type สำหรับค่าในฟอร์มเพิ่มอุปกรณ์
 interface ItemFormValues {
   name: string;
   serialNumber: string;
@@ -18,8 +19,10 @@ const AddItemPage: React.FC = () => {
   const router = useRouter();
   const [form] = Form.useForm();
 
+  // ฟังก์ชันจัดการเมื่อฟอร์มถูกส่ง (เพิ่มอุปกรณ์)
   const onFinish = async (values: ItemFormValues) => {
     try {
+      // ส่งคำขอเพิ่มอุปกรณ์ไปยัง API
       const response = await fetch("/api/auth/item/admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -32,7 +35,7 @@ const AddItemPage: React.FC = () => {
       }
 
       message.success("เพิ่มอุปกรณ์ใหม่สำเร็จ");
-      form.resetFields(); 
+      form.resetFields();
       router.push("/admin/item"); // กลับไปหน้า Item List
     } catch (error) {
       message.error("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");

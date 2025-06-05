@@ -1,6 +1,3 @@
-// app/api/auth/register/route.ts
-
-
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
@@ -41,7 +38,11 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: "สมัครสมาชิกสำเร็จ",
-        user: { id: newUser.id, username: newUser.username, role: newUser.role },
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+          role: newUser.role,
+        },
       },
       { status: 201 }
     );

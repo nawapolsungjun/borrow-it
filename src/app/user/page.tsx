@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Button, Table, message, Modal } from "antd";
 import { RollbackOutlined } from "@ant-design/icons";
 
+// กำหนด Type สำหรับข้อมูล Item
 interface Item {
   id: number;
   name: string;
@@ -13,6 +14,7 @@ interface Item {
   description: string | null;
 }
 
+// กำหนด Type สำหรับข้อมูล BorrowRecord
 interface BorrowRecord {
   id: number;
   itemId: number;
@@ -23,16 +25,17 @@ interface BorrowRecord {
 }
 
 export default function UserBorrowPage() {
-  const [borrowRecords, setBorrowRecords] = useState<BorrowRecord[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [isReturnModalVisible, setIsReturnModalVisible] = useState(false);
-  const [selectedRecord, setSelectedRecord] = useState<BorrowRecord | null>(
+  const [borrowRecords, setBorrowRecords] = useState<BorrowRecord[]>([]); // State สำหรับเก็บรายการบันทึกการยืม
+  const [loading, setLoading] = useState(true); // State สำหรับสถานะการโหลดข้อมูล
+  const [isReturnModalVisible, setIsReturnModalVisible] = useState(false); // State สำหรับควบคุมการแสดง Modal ยืนยันการคืนอุปกรณ์
+  const [selectedRecord, setSelectedRecord] = useState<BorrowRecord | null>( // State สำหรับเก็บข้อมูลบันทึกการยืมที่ถูกเลือกเพื่อคืน
     null
   );
 
+  // ฟังก์ชันดึงข้อมูลบันทึกการยืมจาก API
   const fetchBorrowRecords = async () => {
     try {
-      const response = await fetch("/api/user/borrowRecords");
+      const response = await fetch("/api/user/borrowRecords"); // เรียก API เพื่อดึงข้อมูลประวัติการยืมของผู้ใช้
       if (!response.ok) {
         throw new Error("Failed to fetch borrow records");
       }
@@ -50,31 +53,35 @@ export default function UserBorrowPage() {
     fetchBorrowRecords();
   }, []);
 
+  // ฟังก์ชันสำหรับแสดง Modal ยืนยันการคืนอุปกรณ์
   const showReturnModal = (record: BorrowRecord) => {
     setSelectedRecord(record);
     setIsReturnModalVisible(true);
   };
 
+   // ฟังก์ชันสำหรับยกเลิกการคืนอุปกรณ์
   const handleCancelReturn = () => {
     setIsReturnModalVisible(false);
     setSelectedRecord(null);
   };
 
+  // ฟังก์ชันจัดการการคืนอุปกรณ์
   const handleReturn = async () => {
     if (!selectedRecord) return;
 
     try {
-      const response = await fetch("/api/user/return", {
+      const response = await fetch("/api/user/return", { // ส่งคำขอคืนอุปกรณ์ไปยัง API
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          borrowRecordId: selectedRecord.id,
+          borrowRecordId: selectedRecord.id, // ส่ง ID ของบันทึกการยืม
         }),
       });
 
       if (response.ok) {
+        // แสดงข้อความสำเร็จพร้อมชื่ออุปกรณ์และ Serial Number
         message.success(
           `คืนอุปกรณ์ "${selectedRecord.item.name}" (S/N: ${selectedRecord.item.serialNumber}) สำเร็จ`
         );
@@ -90,6 +97,7 @@ export default function UserBorrowPage() {
     }
   };
 
+  // กำหนดคอลัมน์
   const columns = [
     {
       title: "ชื่ออุปกรณ์",

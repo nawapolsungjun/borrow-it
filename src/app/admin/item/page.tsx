@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import MenuBar from "@/components/admin/MenuBar";
 
+// กำหนด Type สำหรับข้อมูลอุปกรณ์แต่ละรายการ
 interface ItemDataType {
   id: number;
   name: string;
@@ -20,7 +21,7 @@ interface ItemDataType {
   status: "AVAILABLE" | "BORROWED";
   description?: string;
 }
-
+// กำหนดคอลัมน์สำหรับตารางแสดงอุปกรณ์
 const ItemTableColumns = (
   onView: (item: ItemDataType) => void,
   onEdit: (item: ItemDataType) => void,
@@ -56,25 +57,25 @@ const ItemTableColumns = (
     render: (text) => text || "-",
   },
   {
-    title: "Action",
+    title: "Action", // คอลัมน์ปุ่มต่างๆ
     key: "action",
     width: "15%",
     render: (_, record) => (
       <Space size="small">
         <Button
           size="small"
-          icon={<EyeOutlined />}
+          icon={<EyeOutlined />} // ไอคอนปุ่มดูรายละเอียด
           onClick={() => onView(record)}
         />
         <Button
           size="small"
           icon={<EditOutlined />}
-          onClick={() => onEdit(record)}
+          onClick={() => onEdit(record)} // ปุ่มแก้ไข
         />
         <Button
           size="small"
           danger
-          icon={<DeleteOutlined />}
+          icon={<DeleteOutlined />} // ปุ่มลบ
           onClick={() => onDelete(record.id)}
         />
       </Space>
@@ -83,20 +84,22 @@ const ItemTableColumns = (
 ];
 
 const ItemAdminPage: React.FC = () => {
-  const [items, setItems] = useState<ItemDataType[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isViewModalVisible, setIsViewModalVisible] = useState<boolean>(false);
-  const [viewingItem, setViewingItem] = useState<ItemDataType | null>(null);
+  const [items, setItems] = useState<ItemDataType[]>([]); // State สำหรับเก็บรายการอุปกรณ์
+  const [loading, setLoading] = useState<boolean>(false); // สถานะการโหลดข้อมูล
+  const [isViewModalVisible, setIsViewModalVisible] = useState<boolean>(false); // การแสดง Modal ดูรายละเอียด
+  const [viewingItem, setViewingItem] = useState<ItemDataType | null>(null); // เก็บข้อมูลอุปกรณ์ที่กำลังถูกดูรายละเอียด
   const router = useRouter();
 
+  // ฟังก์ชันสำหรับดึงข้อมูลอุปกรณ์จาก API
   const fetchItems = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/auth/item/admin");
+      const response = await fetch("/api/auth/item/admin"); // เรียก API เพื่อดึงข้อมูลอุปกรณ์
       if (!response.ok) {
         throw new Error("Failed to fetch items");
       }
       const data = await response.json();
+      // กรองข้อมูลเฉพาะอุปกรณ์ที่มีสถานะ AVAILABLE หรือ BORROWED
       const filteredData = data.filter(
         (item: ItemDataType) =>
           item.status === "AVAILABLE" || item.status === "BORROWED"
@@ -116,26 +119,32 @@ const ItemAdminPage: React.FC = () => {
     }
   };
 
+  // ใช้ useEffect เพื่อเรียก fetchItems เมื่อคอมโพเนนต์ Mount ครั้งแรก
   useEffect(() => {
     fetchItems();
   }, []);
 
+  // ฟังก์ชันสำหรับเพิ่มอุปกรณ์ใหม่
   const handleAddItem = () => {
-    router.push("/admin/item/add");
+    router.push("/admin/item/add"); // นำทางไปยังหน้าเพิ่มอุปกรณ์
   };
 
+  // ฟังก์ชันสำหรับแก้ไขอุปกรณ์
   const handleEditItem = (item: ItemDataType) => {
-    router.push(`/admin/item/edit/${item.id}`);
+    router.push(`/admin/item/edit/${item.id}`); // นำทางไปยังหน้าแก้ไขอุปกรณ์พร้อม ID
   };
 
+  // ฟังก์ชันสำหรับดูรายละเอียดอุปกรณ์
   const handleViewItem = (item: ItemDataType) => {
-    setViewingItem(item);
-    setIsViewModalVisible(true);
+    setViewingItem(item); // กำหนดอุปกรณ์ที่จะดู
+    setIsViewModalVisible(true); // แสดง Modal
   };
 
+  // ฟังก์ชันสำหรับลบอุปกรณ์
   const handleDeleteItem = (id: number) => {
     console.log("Delete button clicked for ID:", id);
 
+    // ยืนยันการลบกับผู้ใช้
     const isConfirmed = window.confirm(
       `คุณแน่ใจหรือไม่ที่ต้องการลบอุปกรณ์ ID: ${id} นี้?`
     );
@@ -145,6 +154,7 @@ const ItemAdminPage: React.FC = () => {
 
       (async () => {
         try {
+          // ส่งคำขอลบไปยัง API
           const response = await fetch(`/api/auth/item/${id}`, {
             method: "DELETE",
           });
@@ -174,6 +184,7 @@ const ItemAdminPage: React.FC = () => {
     }
   };
 
+  // ฟังก์ชันสำหรับปิด Modal ดูรายละเอียด
   const handleViewModalCancel = () => {
     setIsViewModalVisible(false);
     setViewingItem(null);
